@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/api/getImageNameLocation.py" }
+    { "source": "/(.*)", "destination": "/api/getImageNameLocation" }
   ]
 }
