@@ -6,12 +6,35 @@ from html import unescape
 from pprint import pprint
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-import getInstaOnWebsite
 from concurrent.futures import ThreadPoolExecutor
 from scrapping import baixar_posts, pegarBio
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
 CORS(app, origins="*")
+
+
+def search_instagram_on_website(url):
+    try:
+        headers = {
+            'authority': 'www.google.com',
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'accept-language': 'en-US,en;q=0.9',
+            'cache-control': 'max-age=0',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
+        }
+        response = requests.get(url, headers=headers)
+
+        response.raise_for_status()
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        instagram_tag = soup.find('a', href=lambda href: href and 'instagram.com' in href)
+        if instagram_tag:
+            return instagram_tag['href']
+    except Exception as e:
+        print(e)
+        return None
 
 def extrair_latitude_longitude_nome(url):
     pattern = r'url\?q=(.*?)&opi=.*?,null,\[null,null,(-?\d+\.\d+),(-?\d+\.\d+)\],"[^"]+","(.*?)"'
@@ -102,7 +125,7 @@ def obter_party_banner(item):
             pprint("Perfil no Instagram buscado diretamente: " + perfil)
         elif website and 'instagram' not in website:
             website = urllib.parse.unquote(website)
-            instagram_extracted = getInstaOnWebsite.search_instagram_on_website(website)
+            instagram_extracted = search_instagram_on_website(website)
             if instagram_extracted:
                 profile = instagram_extracted.split('.com/')[-1].split('/')[0].split('%')[0].split('?')[0]
                 item['party_banner'] = baixar_posts(profile)  # Cria uma lista com o URL do banner de festa
