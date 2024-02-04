@@ -28,7 +28,7 @@ def extrair_latitude_longitude_nome_da_url_imagem(url, nomes_vistos):
     for match in matches:
         url_id, name, longitude, latitude = match
 
-        if url_id and name and name not in nomes_vistos and "fotos" not in name:
+        if url_id and name and name not in nomes_vistos and "fotos" not in name and "Photos" not in name:
             nomes_vistos.add(name)
             link_imagem = f"https://lh5.googleusercontent.com/p/AF1Qip{url_id}=s1031"
             informacoes.append({"nome": name, "imagem": link_imagem, "latitude": latitude, "longitude": longitude})
@@ -36,7 +36,7 @@ def extrair_latitude_longitude_nome_da_url_imagem(url, nomes_vistos):
     for match_street in matches_street:
         url_id, name, longitude, latitude = match_street
 
-        if url_id and name and name not in nomes_vistos and "fotos" not in name:
+        if url_id and name and name not in nomes_vistos and "fotos" not in name and "Photos" not in name:
             nomes_vistos.add(name)
             url_id = modificar_largura_altura_url(url_id, nova_largura=1178, nova_altura=1138)
             link_imagem = f"https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid={url_id}"
