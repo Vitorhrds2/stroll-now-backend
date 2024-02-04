@@ -111,7 +111,7 @@ def processar_url(url, nomes_vistos):
     url = re.sub(r'w203.*?,', 's1031,', url)
 
     url, name = url.split(",", 1)
-    if url and name and name not in nomes_vistos and "fotos" not in name:
+    if url and name and name not in nomes_vistos and "fotos" or "Photos" not in name:
         nomes_vistos.add(name)
 
         if "pitch=0&thumbfov=100" in url:
