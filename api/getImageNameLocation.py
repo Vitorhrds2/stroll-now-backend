@@ -7,12 +7,31 @@ from pprint import pprint
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from concurrent.futures import ThreadPoolExecutor
-from scrapping import baixar_posts, pegarBio
 from bs4 import BeautifulSoup
+import instaloader
 
 app = Flask(__name__)
 CORS(app, origins="*")
 
+
+def baixar_posts(profile):
+    bot = instaloader.Instaloader()
+    profile = instaloader.Profile.from_username(bot.context, profile)
+    posts = profile.get_posts()
+    numero_de_posts_desejado = 1
+    posts_baixados = 0
+
+    for index, post in enumerate(posts, 1):
+        if posts_baixados >= numero_de_posts_desejado:
+            break
+
+        posts_baixados += 1
+        return post.url
+
+def pegarBio(profile):
+    bot = instaloader.Instaloader()
+    profile = instaloader.Profile.from_username(bot.context, profile)
+    return profile.biography
 
 def search_instagram_on_website(url):
     try:
