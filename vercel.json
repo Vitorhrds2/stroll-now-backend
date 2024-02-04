@@ -1,5 +1,14 @@
 {
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/api/getImageNameLocation" }
+  "builds": [
+      {
+          "src": "api/getImageNameLocation.py",
+          "use": "@vercel/python"
+      }
+  ],
+  "routes": [
+      {
+          "src": "/(.*)",
+          "dest": "api/getImageNameLocation.py"
+      }
   ]
 }
