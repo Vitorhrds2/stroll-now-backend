@@ -123,7 +123,7 @@ def search_instagram_on_website(url):
         return None
 
 def baixar_posts(profile):
-    bot = instaloader.Instaloader()
+    bot = instaloader.Instaloader(sleep=True, quiet=True)
     profile = instaloader.Profile.from_username(bot.context, profile)
     posts = profile.get_posts()
     numero_de_posts_desejado = 1
@@ -134,7 +134,7 @@ def baixar_posts(profile):
             break
 
         posts_baixados += 1
-        return post.url
+        return [post.url, post.caption, post.date_local]
 
 def pegarBio(profile):
     bot = instaloader.Instaloader()
@@ -161,7 +161,10 @@ def obter_party_banner(item):
         if website and 'instagram' in website:
             website = urllib.parse.unquote(website)
             perfil = website.split('.com/')[-1].split('/')[0].split('%')[0].split('?')[0]
-            item['party_banner'] = baixar_posts(perfil)  
+            item['party_banner'] = baixar_posts(perfil)[0]  
+            item['description'] = baixar_posts(profile)[1]
+            item['data_post'] = baixar_posts(profile)[2]
+            print("Descrição post:", item['dexscription'])
             item['bio_casa_noturna'] = pegarBio(perfil)
             pprint("Perfil no Instagram buscado diretamente: " + perfil)
 
@@ -171,7 +174,10 @@ def obter_party_banner(item):
 
             if instagram_extracted:
                 profile = instagram_extracted.split('.com/')[-1].split('/')[0].split('%')[0].split('?')[0]
-                item['party_banner'] = baixar_posts(profile)  
+                item['party_banner'] = baixar_posts(profile)[0]
+                item['description'] = baixar_posts(profile)[1]
+                item['data_post'] = baixar_posts(profile)[2]
+                print("Descrição post:", item['description'])
                 item['bio_casa_noturna'] = pegarBio(profile)
                 print("Perfil no Instagram buscado no website:", profile, "Website:", website)
 
